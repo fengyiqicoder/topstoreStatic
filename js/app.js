@@ -1,5 +1,5 @@
 import { t, detectLocale } from "./i18n.js";
-import { loadConfig, saveConfig } from "./config.js";
+import { loadConfig } from "./config.js";
 import {
   isAppStoreUrl,
   extractCountryCode,
@@ -357,12 +357,6 @@ async function handleSubmit() {
   $("url-hint").classList.remove("hidden");
 
   const config = loadConfig();
-  if (!config.apiKey) {
-    alert(t(state.locale, "missingKey"));
-    openSettings();
-    return;
-  }
-
   const country = extractCountryCode(url);
   const outputLocale = localeFromCountry(country);
 
@@ -405,27 +399,6 @@ function setSubmitLoading(loading) {
   $("submit-label").textContent = loading
     ? t(state.locale, "processing")
     : t(state.locale, "submit");
-}
-
-function openSettings() {
-  const cfg = loadConfig();
-  $("api-key-input").value = cfg.apiKey || "";
-  $("model-input").value = cfg.model || "";
-  $("proxy-input").value = cfg.proxy || "";
-  $("settings-modal").classList.add("visible");
-}
-
-function closeSettings() {
-  $("settings-modal").classList.remove("visible");
-}
-
-function saveSettings() {
-  saveConfig({
-    apiKey: $("api-key-input").value.trim(),
-    model: $("model-input").value.trim() || "openai/gpt-oss-120b",
-    proxy: $("proxy-input").value.trim(),
-  });
-  closeSettings();
 }
 
 function handleShareCopy() {
@@ -474,13 +447,6 @@ function bindEvents() {
   submit.addEventListener("click", handleSubmit);
 
   $("reset-btn").addEventListener("click", resetState);
-
-  $("settings-btn").addEventListener("click", openSettings);
-  $("settings-cancel").addEventListener("click", closeSettings);
-  $("settings-save").addEventListener("click", saveSettings);
-  $("settings-modal").addEventListener("click", (e) => {
-    if (e.target.id === "settings-modal") closeSettings();
-  });
 
   $("share-copy").addEventListener("click", handleShareCopy);
   $("share-twitter").addEventListener("click", handleShareTwitter);

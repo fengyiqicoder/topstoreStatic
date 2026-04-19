@@ -1,26 +1,9 @@
-const STORAGE_KEY = "topstore-static-config";
-
-const DEFAULTS = {
-  apiKey: "",
+export const CONFIG = {
+  apiKey: "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",
   model: "openai/gpt-oss-120b",
   proxy: "https://corsproxy.io/?",
 };
 
 export function loadConfig() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { ...DEFAULTS };
-    const parsed = JSON.parse(raw);
-    return { ...DEFAULTS, ...parsed };
-  } catch {
-    return { ...DEFAULTS };
-  }
+  return { ...CONFIG };
 }
-
-export function saveConfig(next) {
-  const merged = { ...loadConfig(), ...next };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
-  return merged;
-}
-
-export const DEFAULT_CONFIG = DEFAULTS;
